@@ -1,0 +1,19 @@
+{
+  "name": "node_rest_shop",
+  "version": "1.0.0",
+  "description": "Practice creating RESTful API with Node JS (Building a simple shop API)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "restful",
+    "api"
+  ],
+  "author": "Andrew",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
