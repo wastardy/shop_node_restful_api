@@ -4,6 +4,7 @@ const express = require('express');
     routing, request handlers, and middleware. */
 const app = express();
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 const productRoutes = require('./api/routes/products.js');
 const orderRoutes = require('./api/routes/orders.js');
@@ -19,8 +20,33 @@ const orderRoutes = require('./api/routes/orders.js');
     });
 }); */
 
-// log incoming requests
+// log incoming requests (logger)
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+//extract json data and makes it easy to read
+app.use(bodyParser.json());
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // acces to every client
+
+    res.header(
+        'Access-Control-Allow-Headers', 
+        'Origin, X-Requested-Width, Content-Type, Accept, Authorization'    
+    );
+
+    // browser ask *can he does any requests
+    if (req.method === 'OPTIONS') {
+        res.header(
+            'Access-Control-Allow-Methods', 
+            'GET, PUT, POST, PATCH, DELETE'
+        );
+
+        return res.status(200).json({});
+    }
+
+    next();
+});
 
 
 // ===> Routes which should handle requests <===
