@@ -5,6 +5,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const productRoutes = require('./api/routes/products.js');
 const orderRoutes = require('./api/routes/orders.js');
@@ -19,6 +20,37 @@ const orderRoutes = require('./api/routes/orders.js');
         message: 'it works!'
     });
 }); */
+
+mongoose.connect(
+    'mongodb+srv://wastardy:' + 
+    process.env.MONGO_ATLAS_PW + 
+    '@cluster0.rti1n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+    // {
+    //     useNewUrlParser: true,
+    //     useUnifiedTopology: true
+    // }
+);
+
+// Listen for the connection events
+mongoose.connection.on('connected', () => {
+    console.log('Connected to MongoDB successfully');
+});
+
+mongoose.connection.on('error', (err) => {
+    console.log('Error connecting to MongoDB:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('Disconnected from MongoDB');
+});
+
+// Close the connection when the app is terminated
+process.on('SIGINT', () => {
+    mongoose.connection.close(() => {
+        console.log('MongoDB connection closed due to app termination');
+        process.exit(0);
+    });
+});
 
 // log incoming requests (logger)
 app.use(morgan('dev'));
