@@ -7,6 +7,7 @@ const Product = require('../models/Product.js');
 router.get('/', (req, res, next) => {
     Order.find()
         .select('product quantity _id')
+        .populate('product', 'name') // its like "I need only product name!!"
         .exec()
         .then(docs => {
             console.log('\n===> Fetched ORDERS data from db:\n', docs);
@@ -38,6 +39,9 @@ router.get('/:order_id', (req, res, next) => {
     const orderId = req.params.order_id;
 
     Order.findById(orderId)
+        // here i remove 'name' constraint because
+        // i need all the data about product
+        .populate('product') 
         .exec()
         .then(order => {
             if (!order) {
