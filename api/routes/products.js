@@ -10,14 +10,14 @@ router.get('/', (req, res, next) => {
         .then(docs => {
             console.log(docs);
 
-            // if (docs.length >= 0) {
-            //     res.status(200).json(docs)
-            // }
-            // else {
-            //     res.status(404).json({
-            //         message: 'No entries found'
-            //     });
-            // }
+            /* if (docs.length >= 0) {
+                res.status(200).json(docs)
+            }
+            else {
+                res.status(404).json({
+                    message: 'No entries found'
+                });
+            } */
 
             res.status(200).json(docs);
         })
@@ -32,7 +32,8 @@ router.get('/', (req, res, next) => {
 router.get('/:product_id', (req, res, next) => {
     const productId = req.params.product_id;
 
-    Product.findById(productId).exec()
+    Product.findById(productId)
+        .exec()
         .then(document => {
             console.log(`===> from db: ${document}`);
 
