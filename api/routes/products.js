@@ -21,12 +21,32 @@ const storage = multer.diskStorage({
             .toISOString()
             .replace(/:/g, '-') 
             + file.originalname;
-            
+
         callback(null, uniqueSuffix);
     }
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = (req, file, callback) => {
+    if (file.mimetype === 'image/jpeg' 
+        || file.mimetype === 'image/jpg'
+        || file.mimetype === 'image/png') {
+        
+        // accept a file
+        callback(null, true);
+    }
+    else {
+        // reject a file
+        callback(null, false);
+    }
+};
+
+const upload = multer({ 
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5 // only accept 5 mb files
+    }, 
+    fileFilter: fileFilter
+});
 
 // keep in mind that /products already is at the start of URL
 router.get('/', (req, res, next) => {
