@@ -2,6 +2,31 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Product = require('../models/Product.js');
+const multer = require('multer');
+
+const fs = require('fs');
+const path = './uploads/';
+
+if (!fs.existsSync(path)) {
+    fs.mkdirSync(path, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, path); 
+    },
+    filename: function(req, file, callback) {
+        const uniqueSuffix = 
+            new Date()
+            .toISOString()
+            .replace(/:/g, '-') 
+            + file.originalname;
+            
+        callback(null, uniqueSuffix);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // keep in mind that /products already is at the start of URL
 router.get('/', (req, res, next) => {
@@ -52,7 +77,9 @@ router.get('/:product_id', (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', upload.single('product_image'), (req, res, next) => {
+    // console.log(req.file);
+
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name, 
