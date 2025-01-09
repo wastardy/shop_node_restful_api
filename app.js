@@ -85,6 +85,7 @@ app.use((req, res, next) => {
 /*  anything starter from '/products' in the URL
     will be forwarded to ./api/routes/products.js */
 app.use('/products', productRoutes);
+app.use('/uploads', express.static('uploads'));
 app.use('/orders', orderRoutes);
 
 // this route will be reached ONLY if previous routes
