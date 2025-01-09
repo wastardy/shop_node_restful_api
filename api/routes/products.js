@@ -51,18 +51,24 @@ const upload = multer({
 // keep in mind that /products already is at the start of URL
 router.get('/', (req, res, next) => {
     Product.find()
+        .select('name price _id product_image')
         .exec()
         .then(docs => {
-            console.log(docs);
-
-            /* if (docs.length >= 0) {
-                res.status(200).json(docs)
-            }
-            else {
-                res.status(404).json({
-                    message: 'No entries found'
-                });
-            } */
+            const response = {
+                count: docs.length, 
+                products: docs.map(product => {
+                    return {
+                        name: product.name, 
+                        price: product.price,
+                        product_image: product.product_image,
+                        _id: product._id,
+                        request: {
+                            type: 'GET', 
+                            url: 'http://localhost:3000/products/' + product._id
+                        }
+                    };
+                })
+            };
 
             res.status(200).json(docs);
         })
@@ -78,12 +84,19 @@ router.get('/:product_id', (req, res, next) => {
     const productId = req.params.product_id;
 
     Product.findById(productId)
+        .select('name price _id product_image')
         .exec()
-        .then(document => {
-            console.log(`===> from db: ${document}`);
+        .then(doc => {
+            console.log(`===> from db: ${doc}`);
 
-            if (document) {
-                res.status(200).json(document);
+            if (doc) {
+                res.status(200).json({
+                    product: doc, 
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/products'
+                    }
+                });
             }
             else {
                 res.status(404).json({
@@ -103,7 +116,8 @@ router.post('/', upload.single('product_image'), (req, res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name, 
-        price: req.body.price
+        price: req.body.price,
+        product_image: req.file.path
     });
 
     // mongoose method, store my object in DB
