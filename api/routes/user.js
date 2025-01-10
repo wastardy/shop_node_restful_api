@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/User.js');
 const bcrypt = require('bcrypt');
+const handleError = require('./errorHandler.js');
 
 router.post('/signup', (req, res, next) => {
     // check if passed email for signup already exists
@@ -43,24 +44,19 @@ router.post('/signup', (req, res, next) => {
                                     message: 'User created'
                                 });
                             })
-                            .catch(err => {
-                                console.log(err.message);
-
-                                return res.status(500).json({
-                                    error: err
-                                });
-                            });
+                            .catch(err => handleError(err, res));
                     }
                 });
             }
         })
-        .catch(err => {
-            console.log(err.message);
+        .catch(err => handleError(err, res));
+});
 
-            return res.status(500).json({
-                error: err
-            });
-        });
+router.post('/login', (req, res, next) => {
+    User.find({ email: req.body.email })
+        .exec()
+        .then()
+        .catch(err => handleError(err, res));
 });
 
 router.delete('/:user_id', (req, res, next) => {
@@ -70,18 +66,12 @@ router.delete('/:user_id', (req, res, next) => {
         .exec()
         .then(result => {
             console.log(result);
-            
+
             res.status(200).json({
                 message: 'User has been deleted successfully'
             });
         })
-        .catch(err => {
-            console.log(err.message);
-
-            return res.status(500).json({
-                error: err
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 module.exports = router;

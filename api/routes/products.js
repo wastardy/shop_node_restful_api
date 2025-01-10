@@ -72,12 +72,7 @@ router.get('/', (req, res, next) => {
 
             res.status(200).json(docs);
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 router.get('/:product_id', (req, res, next) => {
@@ -104,10 +99,7 @@ router.get('/:product_id', (req, res, next) => {
                 });
             }
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({error: err})
-        });
+        .catch(err => handleError(err, res));
 });
 
 router.post('/', upload.single('product_image'), (req, res, next) => {
@@ -129,12 +121,7 @@ router.post('/', upload.single('product_image'), (req, res, next) => {
                 createdProduct: result
             });
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 router.patch('/:product_id', (req, res, next) => {
@@ -151,12 +138,7 @@ router.patch('/:product_id', (req, res, next) => {
             console.log(result);
             res.status(200).json(result);
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 router.delete('/:product_id', (req, res, next) => {
@@ -167,12 +149,7 @@ router.delete('/:product_id', (req, res, next) => {
         .then(result => {
             res.status(200).json(result);
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 module.exports = router;

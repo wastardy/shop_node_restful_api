@@ -27,12 +27,7 @@ router.get('/', (req, res, next) => {
                 })
             });
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 router.get('/:order_id', (req, res, next) => {
@@ -67,12 +62,7 @@ router.get('/:order_id', (req, res, next) => {
                 });
             }
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 router.post('/', (req, res, next) => {
@@ -111,12 +101,7 @@ router.post('/', (req, res, next) => {
                     });
                 });
         })
-        .catch(err => {
-            console.log('Error saving order:', err);
-            res.status(500).json({
-                error: err.message
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 router.delete('/:order_id', (req, res, next) => {
@@ -137,12 +122,7 @@ router.delete('/:order_id', (req, res, next) => {
                 }
             });
         })
-        .catch(err => {
-            console.log('Error deleting order:', err);
-            res.status(500).json({
-                error: err.message
-            });
-        });
+        .catch(err => handleError(err, res));
 });
 
 module.exports = router;
