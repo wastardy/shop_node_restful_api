@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const User = require('../models/User.js');
 const bcrypt = require('bcrypt');
 const handleError = require('./errorHandler.js');
+const jwt = require('jsonwebtoken');
 
 router.post('/signup', (req, res, next) => {
     // check if passed email for signup already exists
@@ -64,6 +65,8 @@ router.post('/login', (req, res, next) => {
 
             const enteredPassword = req.body.password;
             const hash = user[0].password;
+            const email = user[0].email;
+            const userId = user[0]._id;
 
             bcrypt.compare(enteredPassword, hash, (err, result) => {
                 if (err) {
@@ -74,8 +77,20 @@ router.post('/login', (req, res, next) => {
                 }
 
                 if (result) {
+                    const jwtToken = jwt.sign(
+                        {
+                            email_address: email, 
+                            user_id: userId
+                        }, 
+                        process.env.JWT_KEY, 
+                        {
+                            expiresIn: "12h"
+                        }
+                    );
+
                     return res.status(200).json({
-                        message: 'Authorization successfull'
+                        message: 'Authorization successfull',
+                        token: jwtToken
                     });
                 }
 
