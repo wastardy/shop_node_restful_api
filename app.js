@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 
 const productRoutes = require('./api/routes/products.js');
 const orderRoutes = require('./api/routes/orders.js');
+const userRoutes = require('./api/routes/user.js');
 
 /*  app.use() registers the middleware being executed 
     for each request. In this case, any query 
@@ -87,6 +88,7 @@ app.use((req, res, next) => {
 app.use('/products', productRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/orders', orderRoutes);
+app.use('/user', userRoutes);
 
 // this route will be reached ONLY if previous routes
 // weren't able to handle the request
