@@ -3,9 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Product = require('../models/Product.js');
 const multer = require('multer');
-
 const fs = require('fs');
 const path = './uploads/';
+const checkAuth = require('../middleware/check_auth.js');
 
 if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive: true });
@@ -102,7 +102,7 @@ router.get('/:product_id', (req, res, next) => {
         .catch(err => handleError(err, res));
 });
 
-router.post('/', upload.single('product_image'), (req, res, next) => {
+router.post('/', checkAuth, upload.single('product_image'), (req, res, next) => {
     // console.log(req.file);
 
     const product = new Product({
@@ -124,7 +124,7 @@ router.post('/', upload.single('product_image'), (req, res, next) => {
         .catch(err => handleError(err, res));
 });
 
-router.patch('/:product_id', (req, res, next) => {
+router.patch('/:product_id', checkAuth, (req, res, next) => {
     const productId = req.params.product_id;
     const updateOptions = {};
 
@@ -141,7 +141,7 @@ router.patch('/:product_id', (req, res, next) => {
         .catch(err => handleError(err, res));
 });
 
-router.delete('/:product_id', (req, res, next) => {
+router.delete('/:product_id', checkAuth, (req, res, next) => {
     const productId = req.params.product_id;
 
     Product.deleteOne({ _id: productId })

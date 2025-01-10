@@ -26,10 +26,6 @@ mongoose.connect(
     'mongodb+srv://wastardy:' + 
     process.env.MONGO_ATLAS_PW + 
     '@cluster0.rti1n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-    // {
-    //     useNewUrlParser: true,
-    //     useUnifiedTopology: true
-    // }
 );
 
 // Listen for the connection events

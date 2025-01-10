@@ -3,8 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Order = require('../models/Order.js');
 const Product = require('../models/Product.js');
+const checkAuth = require('../middleware/check_auth.js');
 
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Order.find()
         .select('product quantity _id')
         .populate('product', 'name') // its like "I need only product name!!"
@@ -30,7 +31,7 @@ router.get('/', (req, res, next) => {
         .catch(err => handleError(err, res));
 });
 
-router.get('/:order_id', (req, res, next) => {
+router.get('/:order_id', checkAuth, (req, res, next) => {
     const orderId = req.params.order_id;
 
     Order.findById(orderId)
@@ -65,7 +66,7 @@ router.get('/:order_id', (req, res, next) => {
         .catch(err => handleError(err, res));
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
     Product.findById(req.body.product_id)
         .then(product => {
             if (!product) {
@@ -104,7 +105,7 @@ router.post('/', (req, res, next) => {
         .catch(err => handleError(err, res));
 });
 
-router.delete('/:order_id', (req, res, next) => {
+router.delete('/:order_id', checkAuth, (req, res, next) => {
     const orderId = req.params.order_id;
     
     Order.deleteOne({ _id: orderId })
