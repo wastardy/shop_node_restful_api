@@ -54,7 +54,34 @@ router.post('/signup', (req, res, next) => {
                 });
             }
         })
-        .catch();
+        .catch(err => {
+            console.log(err.message);
+
+            return res.status(500).json({
+                error: err
+            });
+        });
+});
+
+router.delete('/:user_id', (req, res, next) => {
+    const userId = req.params.user_id;
+
+    User.deleteOne({ _id: userId })
+        .exec()
+        .then(result => {
+            console.log(result);
+            
+            res.status(200).json({
+                message: 'User has been deleted successfully'
+            });
+        })
+        .catch(err => {
+            console.log(err.message);
+
+            return res.status(500).json({
+                error: err
+            });
+        });
 });
 
 module.exports = router;
