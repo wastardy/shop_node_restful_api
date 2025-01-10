@@ -55,7 +55,36 @@ router.post('/signup', (req, res, next) => {
 router.post('/login', (req, res, next) => {
     User.find({ email: req.body.email })
         .exec()
-        .then()
+        .then(user => {
+            if (user.length < 1) {
+                return res.status(401).json({
+                    message: 'Authorization failed'
+                });
+            }
+
+            const enteredPassword = req.body.password;
+            const hash = user[0].password;
+
+            bcrypt.compare(enteredPassword, hash, (err, result) => {
+                if (err) {
+                    return res.status(401).json({
+                        message: 'Failed authorization',
+                        error: err.message
+                    });
+                }
+
+                if (result) {
+                    return res.status(200).json({
+                        message: 'Authorization successfull'
+                    });
+                }
+
+                res.status(401).json({
+                    message: 'Failed authorization',
+                    error: err
+                });
+            });
+        })
         .catch(err => handleError(err, res));
 });
 
